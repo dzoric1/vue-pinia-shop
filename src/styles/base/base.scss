@@ -1,0 +1,30 @@
+body {
+  min-height: 100vh;
+  color: var(--text-black);
+  background: var(--white);
+  font-family: var(--font-family);
+  line-height: 1.2;
+  font-size: 14px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+}
+
+button {
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
+
+a {
+  color: var(--text-black);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
