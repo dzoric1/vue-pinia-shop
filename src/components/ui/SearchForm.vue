@@ -1,5 +1,5 @@
 <script setup>
-import IconSearch from './icons/IconSearch.vue'
+import IconSearch from '../icons/IconSearch.vue'
 
 const props = defineProps({
   class: String,

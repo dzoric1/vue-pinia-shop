@@ -1,5 +1,5 @@
 <script setup>
-import SearchForm from './SearchForm.vue'
+import SearchForm from '@/components/ui/SearchForm.vue'
 import IconUser from './icons/IconUser.vue'
 import IconOrders from './icons/IconOrders.vue'
 import IconFavorites from './icons/IconFavorites.vue'
@@ -57,16 +57,16 @@ import IconCart from './icons/IconCart.vue'
 
 <style lang="scss">
 .header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
   padding: 26px 0;
   background-color: var(--white);
   box-shadow: 0 2px 18px 0 rgba(12, 12, 13, 0.1);
 
   @include tablet {
-    position: fixed;
-    top: 0;
-    width: 100%;
     padding: 10px 0;
-    z-index: 100;
     border-bottom: 2px solid var(--text-gray);
   }
 }
