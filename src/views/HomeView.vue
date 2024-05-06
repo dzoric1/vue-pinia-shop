@@ -1,5 +1,6 @@
 <script setup>
 import DropdownMenu from '@/components/ui/DropdownMenu.vue'
+import RangeSlider from '@/components/ui/RangeSlider.vue'
 </script>
 
 <template>
@@ -13,8 +14,11 @@ import DropdownMenu from '@/components/ui/DropdownMenu.vue'
           <li>
             <DropdownMenu />
           </li>
+          <RangeSlider />
         </ul>
-        <button class="catalog__filters-reset">Очистить фильтр</button>
+        <button class="catalog__filters-reset" type="button">
+          Очистить фильтр
+        </button>
       </aside>
       <div class="catalog__body">КАТАЛОГ</div>
     </div>

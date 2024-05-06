@@ -37,6 +37,10 @@ const toggleCheck = () => {
   &--checked {
     .checkbox__icon {
       background-color: var(--light-green);
+      background-image: url('@/assets/check.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 8px;
     }
   }
 }
@@ -47,6 +51,7 @@ const toggleCheck = () => {
   background-color: rgba(93, 136, 150, 0.08);
   border-radius: 50%;
   margin-right: 8px;
+  transition: background-color 0.2s ease;
 }
 
 .checkbox__input {
