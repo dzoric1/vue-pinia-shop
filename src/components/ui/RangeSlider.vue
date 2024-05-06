@@ -1,39 +1,38 @@
-<template>
-  <div class="range-slider">
-    <input type="range" min="0" max="180" step="1" v-model="sliderMin" />
-    <input type="number" min="0" max="180" step="1" v-model="sliderMin" />
-    <input type="range" min="0" max="180" step="1" v-model="sliderMax" />
-    <input type="number" min="0" max="180" step="1" v-model="sliderMax" />
-  </div>
-</template>
-
 <script>
 import { ref, computed } from 'vue'
 
 export default {
   setup() {
-    const minAngle = ref(10)
-    const maxAngle = ref(30)
+    const minAngle = ref(0)
+    const maxAngle = ref(480)
+    const startBackground = ref('0')
+    const widthBackground = ref('100%')
 
     const sliderMin = computed({
-      get: () => parseInt(minAngle.value),
+      get: () => minAngle.value,
       set: (val) => {
         val = parseInt(val)
         if (val > maxAngle.value) {
           maxAngle.value = val
         }
         minAngle.value = val
+        console.log(val / 480)
+        startBackground.value = `${(val / 480) * 100}%`
+        widthBackground.value = `${(maxAngle.value / 480) * 100 - (minAngle.value / 480) * 100}%`
       }
     })
 
     const sliderMax = computed({
-      get: () => parseInt(maxAngle.value),
+      get: () => maxAngle.value,
       set: (val) => {
         val = parseInt(val)
         if (val < minAngle.value) {
           minAngle.value = val
         }
         maxAngle.value = val
+        console.log(val / 480)
+        startBackground.value = `${(minAngle.value / 480) * 100}%`
+        widthBackground.value = `${(val / 480) * 100 - (minAngle.value / 480) * 100}%`
       }
     })
 
@@ -41,15 +40,54 @@ export default {
       minAngle,
       maxAngle,
       sliderMin,
-      sliderMax
+      sliderMax,
+      // backgroundStart,
+      // backgroundEnd,
+      startBackground,
+      widthBackground
     }
   }
 }
 </script>
 
+<template>
+  <div class="range-slider">
+    <input
+      type="range"
+      min="0"
+      max="480"
+      step="10"
+      v-model.number="sliderMin"
+    />
+    <input
+      type="number"
+      min="0"
+      max="480"
+      step="10"
+      v-model.number="sliderMin"
+    />
+    <input
+      type="range"
+      min="0"
+      max="480"
+      step="10"
+      v-model.number="sliderMax"
+    />
+    <input
+      type="number"
+      min="0"
+      max="480"
+      step="10"
+      v-model.number="sliderMax"
+    />
+    <span class="range-slider__active"></span>
+  </div>
+</template>
+
 <style scoped>
 .range-slider {
-  width: 300px;
+  position: relative;
+  width: 100%;
   margin: auto;
   text-align: center;
   position: relative;
@@ -62,11 +100,26 @@ export default {
   bottom: 0;
 }
 
+.range-slider__active {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--light-green);
+  /* background: linear-gradient(to right, #ff0000 50%, #0000ff 50%); */
+  /* left: 41.2%; */
+  left: v-bind(startBackground);
+  width: v-bind(widthBackground);
+}
+
 input[type='number'] {
-  border: 1px solid #ddd;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
   text-align: center;
-  font-size: 1.6em;
-  appearance: textfield;
+  color: var(--text-gray);
+  background: rgba(93, 136, 150, 0.08);
 }
 
 input[type='number']::-webkit-outer-spin-button,
@@ -76,7 +129,7 @@ input[type='number']::-webkit-inner-spin-button {
 
 input[type='number']:invalid,
 input[type='number']:out-of-range {
-  border: 2px solid #ff6347;
+  border: 2px solid var(--red);
 }
 
 input[type='range'] {
@@ -84,29 +137,12 @@ input[type='range'] {
   width: 100%;
 }
 
-input[type='range']:focus {
-  outline: none;
-}
-
-input[type='range']:focus::-webkit-slider-runnable-track {
-  background: #2497e3;
-}
-
-input[type='range']:focus::-ms-fill-lower {
-  background: #2497e3;
-}
-
-input[type='range']:focus::-ms-fill-upper {
-  background: #2497e3;
-}
-
 input[type='range']::-webkit-slider-runnable-track {
   width: 100%;
-  height: 5px;
+  height: 3px;
   cursor: pointer;
-  animate: 0.2s;
-  background: #2497e3;
-  border-radius: 1px;
+  background: #bdbdbd;
+  border-radius: 2px;
   box-shadow: none;
   border: 0;
 }
@@ -114,14 +150,13 @@ input[type='range']::-webkit-slider-runnable-track {
 input[type='range']::-webkit-slider-thumb {
   z-index: 2;
   position: relative;
-  box-shadow: 0px 0px 0px #000;
-  border: 1px solid #2497e3;
-  height: 18px;
-  width: 18px;
-  border-radius: 25px;
-  background: #a1d0ff;
+  height: 19px;
+  width: 19px;
+  border-radius: 100%;
+  background: #fff;
+  box-shadow: 0 2px 11px 0 rgba(12, 12, 13, 0.2);
   cursor: pointer;
   -webkit-appearance: none;
-  margin-top: -7px;
+  margin-top: -9px;
 }
 </style>
