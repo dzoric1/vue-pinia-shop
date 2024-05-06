@@ -25,7 +25,7 @@
   padding: 30px 0;
 
   @include tablet {
-    padding: 15px 0;
+    padding: 15px 0 30px 0;
   }
 }
 
@@ -59,7 +59,7 @@
     right: 0;
     width: 5px;
     height: 8px;
-    background: url('@/assets/separatorIcon.svg') no-repeat center;
+    background: url('@/assets/arrow.svg') no-repeat center;
   }
 }
 </style>
