@@ -1,8 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 
+const { max } = defineProps({
+  max: Number
+})
+
 const minAngle = ref(0)
-const maxAngle = ref(480)
+const maxAngle = ref(max)
 const startBackground = ref('0')
 const widthBackground = ref('100%')
 
@@ -18,8 +22,8 @@ const sliderMin = computed({
     } else {
       minAngle.value = val
     }
-    startBackground.value = `${(val / 480) * 100}%`
-    widthBackground.value = `${(maxAngle.value / 480) * 100 - (minAngle.value / 480) * 100}%`
+    startBackground.value = `${(val / max) * 100}%`
+    widthBackground.value = `${(maxAngle.value / max) * 100 - (minAngle.value / max) * 100}%`
   }
 })
 
@@ -30,13 +34,13 @@ const sliderMax = computed({
     if (val < minAngle.value) {
       minAngle.value = val
     }
-    if (val > 480) {
-      maxAngle.value = 480
+    if (val > max) {
+      maxAngle.value = max
     } else {
       maxAngle.value = val
     }
-    startBackground.value = `${(minAngle.value / 480) * 100}%`
-    widthBackground.value = `${(val / 480) * 100 - (minAngle.value / 480) * 100}%`
+    startBackground.value = `${(minAngle.value / max) * 100}%`
+    widthBackground.value = `${(val / max) * 100 - (minAngle.value / max) * 100}%`
   }
 })
 </script>
@@ -53,6 +57,7 @@ const sliderMax = computed({
           max="480"
           step="1"
           v-model.number="sliderMin"
+          @change="sliderMin = parseInt(sliderMin)"
         />
         <span>г</span>
       </div>
@@ -64,6 +69,7 @@ const sliderMax = computed({
           max="480"
           step="1"
           v-model.number="sliderMax"
+          @change="sliderMax = parseInt(sliderMax)"
         />
         <span>г</span>
       </div>

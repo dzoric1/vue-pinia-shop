@@ -4,7 +4,6 @@ import CheckBox from './CheckBox.vue'
 
 const isOpen = ref(false)
 const menu = ref(null)
-console.log(menu)
 
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
