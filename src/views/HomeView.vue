@@ -56,6 +56,60 @@ useClickOutside(sort, () => (isOpen.value = false))
             </ul>
           </div>
         </div>
+        <div class="catalog__tags">
+          <ul class="catalog__tags-list">
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button">Говядина 6</button>
+            </li>
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button">Свинина 64</button>
+            </li>
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button">Птица 6</button>
+            </li>
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button">
+                Гусь, утка, индейка, перепелка 6
+              </button>
+            </li>
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button">Говядина 6</button>
+            </li>
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button">Говядина 6</button>
+            </li>
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button">
+                Гусь, утка, индейка, перепелка 6
+              </button>
+            </li>
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button">Говядина 6</button>
+            </li>
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button">
+                Гусь, утка, индейка, перепелка 6
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="catalog__tags">
+          <ul class="catalog__tags-list">
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button catalog__tags-button--green">
+                Bonefesto
+              </button>
+            </li>
+            <li class="catalog__tags-item">
+              <button class="catalog__tags-button catalog__tags-button--green">
+                Сметанковый
+              </button>
+            </li>
+          </ul>
+        </div>
+        <ul class="catalog__list">
+          <li class="catalog__item"></li>
+        </ul>
       </div>
     </div>
   </section>
@@ -104,6 +158,7 @@ useClickOutside(sort, () => (isOpen.value = false))
 
 .catalog__header {
   display: flex;
+  margin-bottom: 30px;
 }
 
 .catalog__title {
@@ -164,6 +219,48 @@ useClickOutside(sort, () => (isOpen.value = false))
   &--active {
     opacity: 1;
     visibility: visible;
+  }
+}
+
+.catalog__tags {
+  margin-bottom: 10px;
+}
+
+.catalog__tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.catalog__tags-item {
+}
+
+.catalog__tags-button {
+  padding: 12px;
+  font-weight: 500;
+  color: var(--text-gray);
+  background-color: #f2f3f5;
+  border-radius: 6px;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &--green {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--light-green);
+    background: rgba(70, 161, 117, 0.15);
+
+    &::after {
+      display: inline-block;
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: url('@/assets/xmark.svg') no-repeat center / contain;
+    }
   }
 }
 </style>
