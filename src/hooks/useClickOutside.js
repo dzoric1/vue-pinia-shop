@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 
 export default function useClickOutside(elementRef, callback) {
   function handleClick(event) {

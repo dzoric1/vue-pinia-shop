@@ -3,6 +3,7 @@ import CheckBox from '@/components/ui/CheckBox.vue'
 import DropdownMenu from '@/components/ui/DropdownMenu.vue'
 import RangeSlider from '@/components/ui/RangeSlider.vue'
 import useClickOutside from '@/hooks/useClickOutside.js'
+import CatalogItem from '@/components/CatalogItem.vue'
 
 import { ref } from 'vue'
 
@@ -33,6 +34,7 @@ useClickOutside(sort, () => (isOpen.value = false))
         <div class="catalog__header">
           <h1 class="catalog__title">Мясо. Птица. Фарш</h1>
           <p class="catalog__count">60 товаров</p>
+          <div style="max-width: 300px"></div>
           <div class="catalog__sort" ref="sort">
             <button @click="isOpen = !isOpen" class="catalog__sort-button">
               Сначала популярные
@@ -108,7 +110,21 @@ useClickOutside(sort, () => (isOpen.value = false))
           </ul>
         </div>
         <ul class="catalog__list">
-          <li class="catalog__item"></li>
+          <li>
+            <CatalogItem :itemId="1" />
+          </li>
+          <li>
+            <CatalogItem :itemId="2" />
+          </li>
+          <li>
+            <CatalogItem :itemId="3" />
+          </li>
+          <li>
+            <CatalogItem :itemId="4" />
+          </li>
+          <li>
+            <CatalogItem :itemId="5" />
+          </li>
         </ul>
       </div>
     </div>
@@ -262,5 +278,13 @@ useClickOutside(sort, () => (isOpen.value = false))
       background: url('@/assets/xmark.svg') no-repeat center / contain;
     }
   }
+}
+
+.catalog__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+  width: 100%;
 }
 </style>
