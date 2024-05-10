@@ -286,5 +286,17 @@ useClickOutside(sort, () => (isOpen.value = false))
   gap: 20px;
   margin-top: 20px;
   width: 100%;
+
+  @include small-desktop {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include big-mobile {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
 }
 </style>

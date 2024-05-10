@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import IconStar from './icons/IconStar.vue'
 import IconAddToFavorite from './icons/IconAddToFavorite.vue'
+import RateComponent from './ui/RateComponent.vue'
+import LikeComponent from './ui/LikeComponent.vue'
+import TagList from './ui/TagList.vue'
 
 const { itemId } = defineProps({
   itemId: Number,
@@ -21,7 +24,7 @@ const tagsColors = {
 const onMouseMove = (e) => {
   e.stopPropagation()
   const swiper = swiperRef.value.swiper
-  const slideWidth = 240 / slideCount
+  const slideWidth = e.target.clientWidth / slideCount
   const slideIndex = Math.abs(Math.trunc(e.offsetX / slideWidth))
   swiper.slideTo(slideIndex)
 }
@@ -57,22 +60,12 @@ const onMouseLeave = (e) => {
       @mouseleave="onMouseLeave"
     ></div>
     <div :id="`swiper-pagination${itemId}`" class="swiper-pagination"></div>
-    <div class="catalog__item-rate">
-      <IconStar />
-      <span>4.6</span>
-    </div>
-    <button
-      class="catalog__item-add-to-favorite catalog__item-add-to-favorite--active"
-    >
-      <IconAddToFavorite />
+    <RateComponent class="catalog__item-rate" />
+    <LikeComponent class="catalog__item-like" />
+    <button class="catalog__item-about-button" @click="$emit('aboutClick')">
+      Подробнее
     </button>
-    <button class="catalog__item-about-button">Подробнее</button>
-    <ul class="catalog__item-tags">
-      <li class="catalog__item-tag">Хит</li>
-      <li class="catalog__item-tag">Новинка</li>
-      <li class="catalog__item-tag">Заморозка</li>
-      <!-- <li class="catalog__item-tag">Ликвидация</li> -->
-    </ul>
+    <TagList class="catalog__item-tags" />
   </div>
 </template>
 
@@ -139,26 +132,13 @@ swiper-container {
   z-index: 5;
   top: 16px;
   left: 16px;
-  font-weight: 500;
-  text-align: center;
-  color: #585858;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
-.catalog__item-add-to-favorite {
+.catalog__item-like {
   position: absolute;
   top: 16px;
   right: 16px;
   z-index: 5;
-
-  &--active {
-    path {
-      fill-rule: inherit;
-      fill: var(--red);
-    }
-  }
 }
 
 .catalog__item-about-button {
@@ -182,21 +162,9 @@ swiper-container {
 }
 
 .catalog__item-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  width: 100%;
+  padding: 0 16px;
   position: absolute;
   z-index: 5;
   bottom: 10px;
-}
-
-.catalog__item-tag {
-  padding: 6px 8px;
-  font-weight: 500;
-  font-size: 12px;
-  color: var(--white);
-  background-color: var(--red);
-  border-radius: 6px;
 }
 </style>

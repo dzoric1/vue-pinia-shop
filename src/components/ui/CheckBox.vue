@@ -43,6 +43,12 @@ const toggleCheck = () => {
       background-size: 8px;
     }
   }
+
+  &:hover {
+    .checkbox__icon {
+      background-color: var(--light-green);
+    }
+  }
 }
 
 .checkbox__icon {
