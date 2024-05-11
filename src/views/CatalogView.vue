@@ -5,12 +5,21 @@ import RangeSlider from '@/components/ui/RangeSlider.vue'
 import useClickOutside from '@/hooks/useClickOutside.js'
 import CatalogItem from '@/components/CatalogItem.vue'
 
-import { ref } from 'vue'
+import { useProductsStore } from '@/stores/products'
+import { storeToRefs } from 'pinia'
+import { ref, onMounted } from 'vue'
+import AppLoader from '@/components/ui/AppLoader.vue'
 
+const productsStore = useProductsStore()
+const { products, isProductsLoading } = storeToRefs(productsStore)
+const { getProducts } = productsStore
 const isOpen = ref(false)
 const sort = ref(null)
-
 useClickOutside(sort, () => (isOpen.value = false))
+
+onMounted(async () => {
+  await getProducts()
+})
 </script>
 
 <template>
@@ -33,8 +42,7 @@ useClickOutside(sort, () => (isOpen.value = false))
       <div class="catalog__body">
         <div class="catalog__header">
           <h1 class="catalog__title">Мясо. Птица. Фарш</h1>
-          <p class="catalog__count">60 товаров</p>
-          <div style="max-width: 300px"></div>
+          <p class="catalog__count">{{ products.length }} товаров</p>
           <div class="catalog__sort" ref="sort">
             <button @click="isOpen = !isOpen" class="catalog__sort-button">
               Сначала популярные
@@ -109,21 +117,14 @@ useClickOutside(sort, () => (isOpen.value = false))
             </li>
           </ul>
         </div>
-        <ul class="catalog__list">
-          <li>
-            <CatalogItem :itemId="1" />
+        <ul v-if="isProductsLoading" class="catalog__list">
+          <li v-for="i in 4" :key="i">
+            <AppLoader />
           </li>
-          <li>
-            <CatalogItem :itemId="2" />
-          </li>
-          <li>
-            <CatalogItem :itemId="3" />
-          </li>
-          <li>
-            <CatalogItem :itemId="4" />
-          </li>
-          <li>
-            <CatalogItem :itemId="5" />
+        </ul>
+        <ul v-else class="catalog__list">
+          <li v-for="product in products" :key="product.id">
+            <CatalogItem :product="product" />
           </li>
         </ul>
       </div>
@@ -246,9 +247,6 @@ useClickOutside(sort, () => (isOpen.value = false))
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-}
-
-.catalog__tags-item {
 }
 
 .catalog__tags-button {

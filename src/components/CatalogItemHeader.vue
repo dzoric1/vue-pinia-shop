@@ -1,25 +1,16 @@
 <script setup>
 import { ref } from 'vue'
-import IconStar from './icons/IconStar.vue'
-import IconAddToFavorite from './icons/IconAddToFavorite.vue'
 import RateComponent from './ui/RateComponent.vue'
 import LikeComponent from './ui/LikeComponent.vue'
 import TagList from './ui/TagList.vue'
 
-const { itemId } = defineProps({
-  itemId: Number,
+const props = defineProps({
+  product: Object,
   isCollapse: Boolean
 })
 
-const spaceBetween = ref(10)
 const swiperRef = ref(null)
-const slideCount = 4
-
-const tagsColors = {
-  Новинка: '#10b145',
-  Заморозка: '#22c6ea',
-  Хит: '#22c6ea'
-}
+const slideCount = props.product.imagesUrl.length
 
 const onMouseMove = (e) => {
   e.stopPropagation()
@@ -29,10 +20,10 @@ const onMouseMove = (e) => {
   swiper.slideTo(slideIndex)
 }
 
-const onMouseLeave = (e) => {
-  const swiper = swiperRef.value.swiper
-  // swiper.slideTo(0)
-}
+// const onMouseLeave = (e) => {
+//   const swiper = swiperRef.value.swiper
+//   swiper.slideTo(0)
+// }
 </script>
 
 <template>
@@ -43,15 +34,14 @@ const onMouseLeave = (e) => {
     <swiper-container
       ref="swiperRef"
       :slidesPerView="1"
-      :space-between="spaceBetween"
+      :space-between="10"
       :centered-slides="true"
       :pagination="{
-        el: `#swiper-pagination${itemId}`
+        el: `#swiper-pagination${product.id}`
       }"
-      :breakpoints="{}"
     >
-      <swiper-slide v-for="i in slideCount" :key="i">
-        <img src="@/assets/cardImage.png" alt="ВСТАВИТЬ ИМЯ ТОВАРА" />
+      <swiper-slide v-for="url in product.imagesUrl" :key="url">
+        <img :src="url" :alt="product.title" />
       </swiper-slide>
     </swiper-container>
     <div
@@ -59,13 +49,17 @@ const onMouseLeave = (e) => {
       @mousemove="onMouseMove"
       @mouseleave="onMouseLeave"
     ></div>
-    <div :id="`swiper-pagination${itemId}`" class="swiper-pagination"></div>
-    <RateComponent class="catalog__item-rate" />
-    <LikeComponent class="catalog__item-like" />
+    <div :id="`swiper-pagination${product.id}`" class="swiper-pagination"></div>
+    <RateComponent
+      v-if="product.rating"
+      :value="product.rating"
+      class="catalog__item-rate"
+    />
+    <LikeComponent class="catalog__item-like" :isLiked="product.isFavorite" />
     <button class="catalog__item-about-button" @click="$emit('aboutClick')">
       Подробнее
     </button>
-    <TagList class="catalog__item-tags" />
+    <TagList class="catalog__item-tags" :tags="product.tags" />
   </div>
 </template>
 

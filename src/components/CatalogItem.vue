@@ -1,7 +1,6 @@
 <script setup>
 import CatalogItemHeader from './CatalogItemHeader.vue'
 import IconAddToCart from './icons/IconAddToCart.vue'
-import IconPoints from './icons/IconPoints.vue'
 import { ref } from 'vue'
 import PopupWrapper from './ui/PopupWrapper.vue'
 import RateComponent from './ui/RateComponent.vue'
@@ -12,25 +11,34 @@ import PriceComponent from './ui/PriceComponent.vue'
 const isCollapse = ref(false)
 const isPopupShow = ref(false)
 
-const { itemId } = defineProps({
-  itemId: Number
+defineProps({
+  product: {
+    type: Object,
+    required: true
+  }
 })
 </script>
 
 <template>
   <div class="catalog__item">
     <CatalogItemHeader
-      :itemId="itemId"
+      :product="product"
       :isCollapse="isCollapse"
       @aboutClick="isPopupShow = !isPopupShow"
     />
     <div class="catalog__item-footer">
       <h3 class="catalog__item-title">
-        Индейка, филе грудки на подложке замороженное "Индилайт"
+        {{ product.title }}
       </h3>
-      <p class="catalog__item-description">300 г · Германия</p>
+      <p class="catalog__item-description">
+        {{ product.weight }} г · {{ product.country }}
+      </p>
       <div class="catalog__item-control">
-        <PriceComponent />
+        <PriceComponent
+          :discount-price="product.discountPrice"
+          :price="product.price"
+          :points="product.points"
+        />
         <button class="catalog__item-button" @click="isCollapse = !isCollapse">
           <IconAddToCart />
         </button>
@@ -51,25 +59,37 @@ const { itemId } = defineProps({
     <PopupWrapper :isShow="isPopupShow" @close="isPopupShow = false">
       <div class="catalog__item-about">
         <div class="catalog__item-about-image">
-          <TagList class="catalog__item-about-tags" />
+          <TagList class="catalog__item-about-tags" :tags="product.tags" />
           <img src="@/assets/cardImage.png" alt="НАЗВАНИЕ ТОВАРА" />
           <LikeComponent class="catalog__item-about-like" />
         </div>
         <div class="catalog__item-about-description">
           <h2 class="catalog__item-about-description-title">
-            Корейка свиная на кости без хребта "СК Короча" "Мираторг" 5,42 кг
+            {{ product.title }}
           </h2>
           <div class="catalog__item-about-description-row">
-            <p class="catalog__item-about-description-brand">Fish & More</p>
-            <p class="catalog__item-about-description">Россия, 12 кг</p>
-            <RateComponent class="catalog__item-about-rate" />
+            <p class="catalog__item-about-description-brand">
+              {{ product.brand }}
+            </p>
+            <p class="catalog__item-about-description">
+              {{ product.country }}, {{ product.weight }} г
+            </p>
+            <RateComponent
+              class="catalog__item-about-rate"
+              :value="product.rating"
+            />
           </div>
           <PriceComponent
+            :discount-price="product.discountPrice"
+            :price="product.price"
+            :package-price="product.packagePrice"
+            :points="product.points"
             class="catalog__item-about-price"
-            package-price="2000"
           />
           <button class="catalog__item-about-add">Добавить в корзину</button>
-          <p class="catalog__item-about-description-stock">В наличии много</p>
+          <p class="catalog__item-about-description-stock">
+            В наличии {{ product.inStock }}
+          </p>
           <RouterLink to="/" class="catalog__item-about-link">
             Перейти в карточку товара
           </RouterLink>
@@ -79,25 +99,33 @@ const { itemId } = defineProps({
           <ul class="catalog__item-about-footer-list">
             <li class="catalog__item-about-footer-item">
               <p class="catalog__item-about-footer-item-title">Срок хранения</p>
-              <p class="catalog__item-about-footer-item-value">1 год</p>
+              <p class="catalog__item-about-footer-item-value">
+                {{ product.deliveryCharacteristics.bestBefore }}
+              </p>
             </li>
             <li class="catalog__item-about-footer-item">
               <p class="catalog__item-about-footer-item-title">
                 Количество в транспортной упаковке
               </p>
-              <p class="catalog__item-about-footer-item-value">10</p>
+              <p class="catalog__item-about-footer-item-value">
+                {{ product.deliveryCharacteristics.count }}
+              </p>
             </li>
             <li class="catalog__item-about-footer-item">
               <p class="catalog__item-about-footer-item-title">
                 Тип транспортной упаковки
               </p>
-              <p class="catalog__item-about-footer-item-value">Коробка</p>
+              <p class="catalog__item-about-footer-item-value">
+                {{ product.deliveryCharacteristics.type }}
+              </p>
             </li>
             <li class="catalog__item-about-footer-item">
               <p class="catalog__item-about-footer-item-title">
                 Количество в транспортной упаковке на паллете
               </p>
-              <p class="catalog__item-about-footer-item-value">40</p>
+              <p class="catalog__item-about-footer-item-value">
+                {{ product.deliveryCharacteristics.palletCount }}
+              </p>
             </li>
           </ul>
         </div>

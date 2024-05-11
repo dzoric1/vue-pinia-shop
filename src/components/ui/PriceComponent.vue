@@ -2,17 +2,20 @@
 import IconPoints from '../icons/IconPoints.vue'
 
 defineProps({
-  packagePrice: Number
+  price: Number,
+  discountPrice: Number,
+  packagePrice: Number,
+  points: Number
 })
 </script>
 
 <template>
   <div class="price">
     <div class="price__row">
-      <p class="price__discount">110 ₽</p>
-      <p class="price__points">+248 <IconPoints /></p>
+      <p v-if="discountPrice" class="price__discount">{{ price }} ₽</p>
+      <p v-if="points" class="price__points">+{{ points }} <IconPoints /></p>
     </div>
-    <p class="price__value">496 ₽ <span>/ кг</span></p>
+    <p class="price__value">{{ discountPrice || price }} ₽ <span>/ кг</span></p>
     <p class="price__package" v-if="packagePrice">{{ packagePrice }} ₽/ кор</p>
   </div>
 </template>

@@ -1,15 +1,16 @@
 <script setup>
 import IconAddToFavorite from '@/components/icons/IconAddToFavorite.vue'
-import { ref } from 'vue'
 
-const isLiked = ref(false)
+defineProps({
+  isLiked: Boolean
+})
 </script>
 
 <template>
   <button
     class="like"
     :class="{ 'like--active': isLiked }"
-    @click="isLiked = !isLiked"
+    @click="$emit('click')"
   >
     <IconAddToFavorite />
   </button>

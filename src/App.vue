@@ -1,5 +1,5 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import AppHeader from './components/AppHeader.vue'
 import AppBreadcrumbs from './components/AppBreadcrumbs.vue'
 import { register } from 'swiper/element/bundle'

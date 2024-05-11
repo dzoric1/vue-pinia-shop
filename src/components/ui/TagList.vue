@@ -1,11 +1,33 @@
-<script setup></script>
+<script setup>
+defineProps({
+  tags: Array
+})
+
+const tagColor = (tag) => {
+  switch (tag.toLowerCase()) {
+    case 'хит':
+      return '#FF8C22'
+    case 'заморозка':
+      return '#22C6EA '
+    case 'новинка':
+      return '#10B145'
+
+    default:
+      return '#F3223C'
+  }
+}
+</script>
 
 <template>
-  <ul class="tags">
-    <li class="tags__item">Хит</li>
-    <li class="tags__item">Новинка</li>
-    <li class="tags__item">Заморозка</li>
-    <!-- <li class="tags__item">Ликвидация</li> -->
+  <ul v-if="tags" class="tags">
+    <li
+      v-for="tag in tags"
+      class="tags__item"
+      :key="tag"
+      :style="{ backgroundColor: tagColor(tag) }"
+    >
+      {{ tag }}
+    </li>
   </ul>
 </template>
 
