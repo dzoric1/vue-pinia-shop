@@ -2,8 +2,12 @@
 import { ref, computed } from 'vue'
 
 const props = defineProps({
-  max: Number
+  max: Number,
+  label: String,
+  valueName: String
 })
+
+console.log(props)
 
 const minAngle = ref(0)
 const maxAngle = ref(props.max)
@@ -47,45 +51,45 @@ const sliderMax = computed({
 
 <template>
   <div class="range-slider">
-    <h3 class="range-slider__title">Вес</h3>
+    <h3 class="range-slider__title">{{ label }}</h3>
     <div class="range-slider__numbers">
       <div class="range-slider__input-number">
         <span>от</span>
         <input
           type="number"
           min="0"
-          max="480"
+          :max="max"
           step="1"
           v-model.number="sliderMin"
           @change="sliderMin = parseInt(sliderMin)"
         />
-        <span>г</span>
+        <span>{{ valueName }}</span>
       </div>
       <div class="range-slider__input-number">
         <span>до</span>
         <input
           type="number"
           min="0"
-          max="480"
+          :max="max"
           step="1"
           v-model.number="sliderMax"
           @change="sliderMax = parseInt(sliderMax)"
         />
-        <span>г</span>
+        <span>{{ valueName }}</span>
       </div>
     </div>
     <div class="range-slider__range">
       <input
         type="range"
         min="0"
-        max="480"
+        :max="max"
         step="10"
         v-model.number="sliderMin"
       />
       <input
         type="range"
         min="0"
-        max="480"
+        :max="max"
         step="10"
         v-model.number="sliderMax"
       />

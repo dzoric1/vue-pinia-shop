@@ -2,6 +2,11 @@
 import { ref } from 'vue'
 import CheckBox from './CheckBox.vue'
 
+defineProps({
+  label: String,
+  list: Array
+})
+
 const isOpen = ref(false)
 const menu = ref(null)
 
@@ -18,15 +23,12 @@ const toggleMenu = () => {
       type="button"
       aria-label="открыть меню"
     >
-      <h3 class="dropdown__title">Страна</h3>
+      <h3 class="dropdown__title">{{ label }}</h3>
     </button>
     <div class="dropdown__menu" ref="menu">
       <ul class="dropdown__menu-list">
-        <li>
-          <CheckBox :label="'Все страны'" />
-        </li>
-        <li>
-          <CheckBox :label="'Все страны'" />
+        <li v-for="(item, i) in list" class="dropdown__menu-item" :key="i">
+          <CheckBox :label="item" :name="item" />
         </li>
       </ul>
     </div>

@@ -1,25 +1,13 @@
 <script setup>
-import { ref } from 'vue'
-
 defineProps({
-  label: String
+  label: String,
+  isChecked: Boolean
 })
-
-const isChecked = ref(false)
-
-const toggleCheck = () => {
-  isChecked.value = !isChecked.value
-}
 </script>
 
 <template>
   <label class="checkbox" :class="{ 'checkbox--checked': isChecked }">
-    <input
-      @change="toggleCheck"
-      type="checkbox"
-      :checked="isChecked"
-      class="checkbox__input"
-    />
+    <input type="checkbox" :checked="isChecked" class="checkbox__input" />
     <span class="checkbox__icon"></span>
     {{ label }}
   </label>

@@ -7,8 +7,9 @@ import CatalogItem from '@/components/CatalogItem.vue'
 
 import { useProductsStore } from '@/stores/products'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import AppLoader from '@/components/ui/AppLoader.vue'
+import SortComponent from '@/components/ui/SortComponent.vue'
 
 const productsStore = useProductsStore()
 
@@ -16,9 +17,35 @@ const { products, isProductsLoading, totalProducts } =
   storeToRefs(productsStore)
 
 const { getProducts } = productsStore
-const isOpen = ref(false)
-const sort = ref(null)
-useClickOutside(sort, () => (isOpen.value = false))
+
+const getFilterList = (sortValue) => {
+  return products.value.reduce((acc, product) => {
+    if (!acc.includes(product[sortValue])) {
+      acc.push(product[sortValue])
+    }
+    return acc
+  }, [])
+}
+
+const brandsList = computed(() => {
+  return getFilterList('brand')
+})
+
+const countryList = computed(() => {
+  return getFilterList('country')
+})
+
+const menuList = computed(() => {
+  return getFilterList('menu')
+})
+
+const tasteList = computed(() => {
+  return getFilterList('taste')
+})
+
+// watch(tasteList, () => {
+//   getProducts()
+// })
 
 onMounted(async () => {
   await getProducts()
@@ -31,12 +58,19 @@ onMounted(async () => {
       <aside class="catalog__filters">
         <ul class="catalog__filters-list">
           <li>
-            <DropdownMenu />
+            <DropdownMenu :list="brandsList" label="Бренд" />
           </li>
           <li>
-            <DropdownMenu />
+            <DropdownMenu :list="countryList" label="Страна" />
           </li>
-          <RangeSlider :max="480" />
+          <li>
+            <DropdownMenu :list="menuList" label="Направления меню" />
+          </li>
+          <li>
+            <DropdownMenu :list="tasteList" label="Вкус мяса" />
+          </li>
+          <RangeSlider :max="480" label="Вес" valueName="г" />
+          <RangeSlider :max="480" label="Цена" valueName="₽" />
         </ul>
         <button class="catalog__filters-reset" type="button">
           Очистить фильтр
@@ -46,28 +80,7 @@ onMounted(async () => {
         <div class="catalog__header">
           <h1 class="catalog__title">Мясо. Птица. Фарш</h1>
           <p class="catalog__count">{{ totalProducts }} товаров</p>
-          <div class="catalog__sort" ref="sort">
-            <button @click="isOpen = !isOpen" class="catalog__sort-button">
-              Сначала популярные
-            </button>
-            <ul
-              class="catalog__sort-list"
-              :class="{ 'catalog__sort-list--active': isOpen }"
-            >
-              <li>
-                <CheckBox label="Сначала популярные" />
-              </li>
-              <li>
-                <CheckBox label="Сначала дешевле" />
-              </li>
-              <li>
-                <CheckBox label="Сначала дороже" />
-              </li>
-              <li>
-                <CheckBox label="Высокий рейтинг" />
-              </li>
-            </ul>
-          </div>
+          <SortComponent />
         </div>
         <div class="catalog__tags">
           <ul class="catalog__tags-list">
@@ -192,54 +205,6 @@ onMounted(async () => {
   line-height: 135%;
   color: var(--text-gray);
   align-self: flex-end;
-}
-
-.catalog__sort {
-  position: relative;
-  margin-top: 6px;
-  margin-left: auto;
-}
-
-.catalog__sort-button {
-  color: rgba(12, 12, 13, 0.8);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  &::after {
-    display: inline-block;
-    content: '';
-    transform: rotate(90deg);
-    transition: transform 0.2s ease;
-    width: 7px;
-    height: 12px;
-    background: url('@/assets/arrow.svg') no-repeat center / contain;
-    margin-right: 3px;
-  }
-}
-
-.catalog__sort-list {
-  padding: 20px 16px;
-  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
-  background-color: var(--white);
-  border-radius: 12px;
-  width: 192px;
-  display: flex;
-  gap: 15px;
-  flex-direction: column;
-  position: absolute;
-  top: calc(100% - 10px);
-  right: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.2s ease,
-    visibility 0.2s ease;
-
-  &--active {
-    opacity: 1;
-    visibility: visible;
-  }
 }
 
 .catalog__tags {

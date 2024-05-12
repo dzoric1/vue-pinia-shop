@@ -1,17 +1,27 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
+import { useSortStore } from './sort'
 
 const baseUrl = 'https://ec1e0dcee8241ee0.mokky.dev/items'
 
 export const useProductsStore = defineStore('products', () => {
   const isProductsLoading = ref(false)
   const products = ref([])
+  const sortStore = useSortStore()
+  const { sort } = storeToRefs(sortStore)
+
+  const params = computed(() => {
+    console.log()
+    return new URLSearchParams({
+      sortBy: sort.value.sortProperty
+    })
+  })
 
   const getProducts = async () => {
     isProductsLoading.value = true
 
     try {
-      const response = await fetch(baseUrl)
+      const response = await fetch(`${baseUrl}?${params.value.toString()}`)
 
       if (!response.ok) {
         throw new Error('Произошла ошибка в получении данных')
