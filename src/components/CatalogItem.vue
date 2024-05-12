@@ -1,21 +1,40 @@
 <script setup>
 import CatalogItemHeader from './CatalogItemHeader.vue'
 import IconAddToCart from './icons/IconAddToCart.vue'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import PopupWrapper from './ui/PopupWrapper.vue'
 import RateComponent from './ui/RateComponent.vue'
 import LikeComponent from './ui/LikeComponent.vue'
 import TagList from './ui/TagList.vue'
 import PriceComponent from './ui/PriceComponent.vue'
+import { useCartStore } from '@/stores/cart'
+import { useProductsStore } from '@/stores/products'
+import { storeToRefs } from 'pinia'
 
-const isCollapse = ref(false)
-const isPopupShow = ref(false)
-
-defineProps({
+const props = defineProps({
   product: {
     type: Object,
     required: true
   }
+})
+const cartStore = useCartStore()
+const productStore = useProductsStore()
+const { cart } = storeToRefs(cartStore)
+const { toggleFavorite } = productStore
+const { addToCart, incrementCartItem, decrementCartItem } = cartStore
+const isPopupShow = ref(false)
+
+const cartItem = computed(() => {
+  return cart.value.find((item) => item.id === props.product.id)
+})
+
+const convertWeight = (weight) => {
+  const result = weight >= 1000 ? `${weight / 1000} кг` : `${weight} г`
+  return result
+}
+
+const totalWeight = computed(() => {
+  return cartItem.value ? cartItem.value.totalWeight : 0
 })
 </script>
 
@@ -23,7 +42,7 @@ defineProps({
   <div class="catalog__item">
     <CatalogItemHeader
       :product="product"
-      :isCollapse="isCollapse"
+      :isCollapse="!!cartItem"
       @aboutClick="isPopupShow = !isPopupShow"
     />
     <div class="catalog__item-footer">
@@ -31,7 +50,7 @@ defineProps({
         {{ product.title }}
       </h3>
       <p class="catalog__item-description">
-        {{ product.weight }} г · {{ product.country }}
+        {{ convertWeight(product.weight) }} · {{ product.country }}
       </p>
       <div class="catalog__item-control">
         <PriceComponent
@@ -39,17 +58,25 @@ defineProps({
           :price="product.price"
           :points="product.points"
         />
-        <button class="catalog__item-button" @click="isCollapse = !isCollapse">
+        <button
+          v-if="!totalWeight"
+          class="catalog__item-button"
+          @click="() => addToCart(product)"
+        >
           <IconAddToCart />
         </button>
       </div>
-      <div v-show="isCollapse" class="catalog__item-cart-count">
+      <div v-show="totalWeight" class="catalog__item-cart-count">
         <button
           class="catalog__item-cart-button catalog__item-cart-button--minus"
+          @click="() => decrementCartItem(cartItem)"
         ></button>
-        <p class="catalog__item-cart-count-value">2.5 кг</p>
+        <p class="catalog__item-cart-count-value">
+          {{ convertWeight(totalWeight) }}
+        </p>
         <button
           class="catalog__item-cart-button catalog__item-cart-button--plus"
+          @click="() => incrementCartItem(cartItem)"
         ></button>
       </div>
     </div>
@@ -61,7 +88,11 @@ defineProps({
         <div class="catalog__item-about-image">
           <TagList class="catalog__item-about-tags" :tags="product.tags" />
           <img src="@/assets/cardImage.png" alt="НАЗВАНИЕ ТОВАРА" />
-          <LikeComponent class="catalog__item-about-like" />
+          <LikeComponent
+            @click="() => toggleFavorite(product.id)"
+            class="catalog__item-about-like"
+            :isLiked="product.isFavorite"
+          />
         </div>
         <div class="catalog__item-about-description">
           <h2 class="catalog__item-about-description-title">
@@ -86,7 +117,26 @@ defineProps({
             :points="product.points"
             class="catalog__item-about-price"
           />
-          <button class="catalog__item-about-add">Добавить в корзину</button>
+          <div v-show="totalWeight" class="catalog__item-cart-count">
+            <button
+              class="catalog__item-cart-button catalog__item-cart-button--minus"
+              @click="() => decrementCartItem(cartItem)"
+            ></button>
+            <p class="catalog__item-cart-count-value">
+              {{ convertWeight(totalWeight) }}
+            </p>
+            <button
+              class="catalog__item-cart-button catalog__item-cart-button--plus"
+              @click="() => incrementCartItem(cartItem)"
+            ></button>
+          </div>
+          <button
+            class="catalog__item-about-add"
+            @click="() => addToCart(product)"
+            v-if="!totalWeight"
+          >
+            Добавить в корзину
+          </button>
           <p class="catalog__item-about-description-stock">
             В наличии {{ product.inStock }}
           </p>
@@ -196,6 +246,7 @@ defineProps({
   align-items: center;
   justify-content: space-between;
   margin-top: 15px;
+  max-width: 240px;
 }
 
 .catalog__item-cart-button {

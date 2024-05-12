@@ -1,12 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-const { max } = defineProps({
+const props = defineProps({
   max: Number
 })
 
 const minAngle = ref(0)
-const maxAngle = ref(max)
+const maxAngle = ref(props.max)
 const startBackground = ref('0')
 const widthBackground = ref('100%')
 
@@ -22,8 +22,8 @@ const sliderMin = computed({
     } else {
       minAngle.value = val
     }
-    startBackground.value = `${(val / max) * 100}%`
-    widthBackground.value = `${(maxAngle.value / max) * 100 - (minAngle.value / max) * 100}%`
+    startBackground.value = `${(val / props.max) * 100}%`
+    widthBackground.value = `${(maxAngle.value / props.max) * 100 - (minAngle.value / props.max) * 100}%`
   }
 })
 
@@ -34,13 +34,13 @@ const sliderMax = computed({
     if (val < minAngle.value) {
       minAngle.value = val
     }
-    if (val > max) {
-      maxAngle.value = max
+    if (val > props.max) {
+      maxAngle.value = props.max
     } else {
       maxAngle.value = val
     }
-    startBackground.value = `${(minAngle.value / max) * 100}%`
-    widthBackground.value = `${(val / max) * 100 - (minAngle.value / max) * 100}%`
+    startBackground.value = `${(minAngle.value / props.max) * 100}%`
+    widthBackground.value = `${(val / props.max) * 100 - (minAngle.value / props.max) * 100}%`
   }
 })
 </script>

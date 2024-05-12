@@ -3,11 +3,15 @@ import { ref } from 'vue'
 import RateComponent from './ui/RateComponent.vue'
 import LikeComponent from './ui/LikeComponent.vue'
 import TagList from './ui/TagList.vue'
+import { useProductsStore } from '@/stores/products'
 
 const props = defineProps({
   product: Object,
   isCollapse: Boolean
 })
+
+const productsStore = useProductsStore()
+const { toggleFavorite } = productsStore
 
 const swiperRef = ref(null)
 const slideCount = props.product.imagesUrl.length
@@ -55,7 +59,11 @@ const onMouseMove = (e) => {
       :value="product.rating"
       class="catalog__item-rate"
     />
-    <LikeComponent class="catalog__item-like" :isLiked="product.isFavorite" />
+    <LikeComponent
+      class="catalog__item-like"
+      :isLiked="product.isFavorite"
+      @click="() => toggleFavorite(product.id)"
+    />
     <button class="catalog__item-about-button" @click="$emit('aboutClick')">
       Подробнее
     </button>

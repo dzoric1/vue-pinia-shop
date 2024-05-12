@@ -11,7 +11,10 @@ import { ref, onMounted } from 'vue'
 import AppLoader from '@/components/ui/AppLoader.vue'
 
 const productsStore = useProductsStore()
-const { products, isProductsLoading } = storeToRefs(productsStore)
+
+const { products, isProductsLoading, totalProducts } =
+  storeToRefs(productsStore)
+
 const { getProducts } = productsStore
 const isOpen = ref(false)
 const sort = ref(null)
@@ -42,7 +45,7 @@ onMounted(async () => {
       <div class="catalog__body">
         <div class="catalog__header">
           <h1 class="catalog__title">Мясо. Птица. Фарш</h1>
-          <p class="catalog__count">{{ products.length }} товаров</p>
+          <p class="catalog__count">{{ totalProducts }} товаров</p>
           <div class="catalog__sort" ref="sort">
             <button @click="isOpen = !isOpen" class="catalog__sort-button">
               Сначала популярные

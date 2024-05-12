@@ -23,9 +23,45 @@ export const useProductsStore = defineStore('products', () => {
     } finally {
       console.log(products.value)
       isProductsLoading.value = false
-      console.log(isProductsLoading.value)
     }
   }
 
-  return { getProducts, products, isProductsLoading }
+  const toggleFavorite = async (productId) => {
+    try {
+      const product = products.value.find((product) => product.id === productId)
+
+      const response = await fetch(`${baseUrl}/${productId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          isFavorite: !product.isFavorite
+        })
+      })
+
+      product.isFavorite = !product.isFavorite
+
+      if (!response.ok) {
+        throw new Error('Произошла ошибка в изменении лайка')
+      }
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  const totalProducts = computed(() => products.value.length)
+
+  const favoriteProducts = computed(() =>
+    products.value.filter((product) => product.isFavorite)
+  )
+
+  return {
+    getProducts,
+    products,
+    isProductsLoading,
+    totalProducts,
+    favoriteProducts,
+    toggleFavorite
+  }
 })

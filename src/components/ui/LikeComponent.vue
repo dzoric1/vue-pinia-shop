@@ -7,11 +7,7 @@ defineProps({
 </script>
 
 <template>
-  <button
-    class="like"
-    :class="{ 'like--active': isLiked }"
-    @click="$emit('click')"
-  >
+  <button class="like" :class="{ 'like--active': isLiked }">
     <IconAddToFavorite />
   </button>
 </template>

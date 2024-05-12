@@ -1,9 +1,18 @@
 <script setup>
+import { storeToRefs } from 'pinia'
 import SearchForm from '@/components/ui/SearchForm.vue'
 import IconUser from './icons/IconUser.vue'
 import IconOrders from './icons/IconOrders.vue'
 import IconFavorites from './icons/IconFavorites.vue'
 import IconCart from './icons/IconCart.vue'
+
+import { useProductsStore } from '@/stores/products'
+import { useCartStore } from '@/stores/cart'
+
+const cartStore = useCartStore()
+const productsStore = useProductsStore()
+const { favoriteProducts } = storeToRefs(productsStore)
+const { cart } = storeToRefs(cartStore)
 </script>
 
 <template>
@@ -22,29 +31,31 @@ import IconCart from './icons/IconCart.vue'
       <nav class="header__nav">
         <ul class="header__nav-list">
           <li class="header__nav-item">
-            <RouterLink to="./sign-in" class="header__nav-link">
-              <span class="header__nav-count"></span>
+            <RouterLink to="./" class="header__nav-link">
               <IconUser />
               Войти
             </RouterLink>
           </li>
           <li class="header__nav-item">
-            <RouterLink to="./orders" class="header__nav-link">
-              <span class="header__nav-count"></span>
+            <RouterLink to="./" class="header__nav-link">
               <IconOrders />
               Заказы
             </RouterLink>
           </li>
           <li class="header__nav-item">
-            <RouterLink to="./favorites" class="header__nav-link">
-              <span class="header__nav-count">2</span>
+            <RouterLink to="./" class="header__nav-link">
+              <span v-if="favoriteProducts.length" class="header__nav-count">{{
+                favoriteProducts.length
+              }}</span>
               <IconFavorites />
               Избранное
             </RouterLink>
           </li>
           <li class="header__nav-item">
             <RouterLink to="./cart" class="header__nav-link">
-              <span class="header__nav-count">22</span>
+              <span v-if="cart.length" class="header__nav-count">{{
+                cart.length
+              }}</span>
               <IconCart />
               Корзина
             </RouterLink>
