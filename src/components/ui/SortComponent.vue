@@ -79,6 +79,7 @@ useClickOutside(sortRef, () => (isOpen.value = false))
   gap: 15px;
   flex-direction: column;
   position: absolute;
+  z-index: 100;
   top: calc(100% - 10px);
   right: 0;
   opacity: 0;

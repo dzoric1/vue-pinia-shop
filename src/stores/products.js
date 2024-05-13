@@ -10,11 +10,11 @@ export const useProductsStore = defineStore('products', () => {
   const products = ref([])
   const sortStore = useSortStore()
   const filtersStore = useFiltersStore()
-  const { filterProducts } = filtersStore
+  const { filterProductsBySearch } = filtersStore
   const { sortProducts } = sortStore
 
   const currentProducts = computed(() => {
-    return sortProducts(filterProducts(products.value))
+    return sortProducts(filterProductsBySearch(products.value))
   })
 
   const getProducts = async () => {

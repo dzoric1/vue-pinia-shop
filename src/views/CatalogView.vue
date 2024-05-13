@@ -3,21 +3,29 @@ import DropdownMenu from '@/components/ui/DropdownMenu.vue'
 import RangeSlider from '@/components/ui/RangeSlider.vue'
 import CatalogItem from '@/components/CatalogItem.vue'
 import { useProductsStore } from '@/stores/products'
+import { useFiltersStore } from '@/stores/filters'
 import { storeToRefs } from 'pinia'
 import { onMounted, computed } from 'vue'
 import AppLoader from '@/components/ui/AppLoader.vue'
 import SortComponent from '@/components/ui/SortComponent.vue'
+import FilterTagList from '@/components/ui/FilterTagList.vue'
 
 const productsStore = useProductsStore()
 const { products, isProductsLoading, totalProducts, currentProducts } =
   storeToRefs(productsStore)
-
 const { getProducts } = productsStore
+
+const filterStore = useFiltersStore()
+const { filters } = storeToRefs(filterStore)
+const { addFilter, deleteFilter } = filterStore
 
 const getFilterList = (sortValue) => {
   return products.value.reduce((acc, product) => {
-    if (!acc.includes(product[sortValue])) {
-      acc.push(product[sortValue])
+    const existingFilter = acc.find((item) => item.name === product[sortValue])
+    if (existingFilter) {
+      existingFilter.count++
+    } else {
+      acc.push({ name: product[sortValue], count: 1, sortValue: sortValue })
     }
     return acc
   }, [])
@@ -39,6 +47,10 @@ const tasteList = computed(() => {
   return getFilterList('taste')
 })
 
+const typeList = computed(() => {
+  return getFilterList('type')
+})
+
 onMounted(async () => {
   await getProducts()
 })
@@ -50,16 +62,28 @@ onMounted(async () => {
       <aside class="catalog__filters">
         <ul class="catalog__filters-list">
           <li>
-            <DropdownMenu :list="brandsList" label="Бренд" />
+            <DropdownMenu :list="brandsList" label="Бренд" @click="addFilter" />
           </li>
           <li>
-            <DropdownMenu :list="countryList" label="Страна" />
+            <DropdownMenu
+              :list="countryList"
+              label="Страна"
+              @click="addFilter"
+            />
           </li>
           <li>
-            <DropdownMenu :list="menuList" label="Направления меню" />
+            <DropdownMenu
+              :list="menuList"
+              label="Направления меню"
+              @click="addFilter"
+            />
           </li>
           <li>
-            <DropdownMenu :list="tasteList" label="Вкус мяса" />
+            <DropdownMenu
+              :list="tasteList"
+              label="Вкус мяса"
+              @click="addFilter"
+            />
           </li>
           <RangeSlider :max="480" label="Вес" valueName="г" />
           <RangeSlider :max="480" label="Цена" valueName="₽" />
@@ -74,67 +98,30 @@ onMounted(async () => {
           <p class="catalog__count">{{ totalProducts }} товаров</p>
           <SortComponent />
         </div>
-        <div class="catalog__tags">
-          <ul class="catalog__tags-list">
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button">Говядина 6</button>
-            </li>
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button">Свинина 64</button>
-            </li>
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button">Птица 6</button>
-            </li>
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button">
-                Гусь, утка, индейка, перепелка 6
-              </button>
-            </li>
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button">Говядина 6</button>
-            </li>
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button">Говядина 6</button>
-            </li>
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button">
-                Гусь, утка, индейка, перепелка 6
-              </button>
-            </li>
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button">Говядина 6</button>
-            </li>
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button">
-                Гусь, утка, индейка, перепелка 6
-              </button>
-            </li>
-          </ul>
-        </div>
-        <div class="catalog__tags">
-          <ul class="catalog__tags-list">
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button catalog__tags-button--green">
-                Bonefesto
-              </button>
-            </li>
-            <li class="catalog__tags-item">
-              <button class="catalog__tags-button catalog__tags-button--green">
-                Сметанковый
-              </button>
-            </li>
-          </ul>
-        </div>
+        <FilterTagList
+          v-if="typeList"
+          :list="typeList"
+          class="catalog__tags"
+          @click="addFilter"
+        />
+        <FilterTagList
+          v-if="filters"
+          :list="filters"
+          class="catalog__tags"
+          isGreen
+          @click="deleteFilter"
+        />
         <ul v-if="isProductsLoading" class="catalog__list">
           <li v-for="i in 4" :key="i">
             <AppLoader />
           </li>
         </ul>
-        <ul v-else class="catalog__list">
+        <ul v-else-if="currentProducts.length > 0" class="catalog__list">
           <li v-for="product in currentProducts" :key="product.id">
             <CatalogItem :product="product" />
           </li>
         </ul>
+        <h2 class="catalog__not-found" v-else>Ничего не найдено</h2>
       </div>
     </div>
   </section>
@@ -209,41 +196,6 @@ onMounted(async () => {
   margin-bottom: 10px;
 }
 
-.catalog__tags-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.catalog__tags-button {
-  padding: 12px;
-  font-weight: 500;
-  color: var(--text-gray);
-  background-color: #f2f3f5;
-  border-radius: 6px;
-  transition: opacity 0.2s ease;
-
-  &:hover {
-    opacity: 0.7;
-  }
-
-  &--green {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--light-green);
-    background: rgba(70, 161, 117, 0.15);
-
-    &::after {
-      display: inline-block;
-      content: '';
-      width: 8px;
-      height: 8px;
-      background: url('@/assets/xmark.svg') no-repeat center / contain;
-    }
-  }
-}
-
 .catalog__list {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -262,5 +214,12 @@ onMounted(async () => {
   @include big-mobile {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
+}
+
+.catalog__not-found {
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 60px;
 }
 </style>

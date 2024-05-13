@@ -7,8 +7,6 @@ const props = defineProps({
   valueName: String
 })
 
-console.log(props)
-
 const minAngle = ref(0)
 const maxAngle = ref(props.max)
 const startBackground = ref('0')

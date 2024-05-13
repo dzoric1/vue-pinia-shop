@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import CheckBox from './CheckBox.vue'
+import { useFiltersStore } from '@/stores/filters'
 
 defineProps({
   label: String,
@@ -13,6 +14,11 @@ const menu = ref(null)
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
 }
+
+const filtersStore = useFiltersStore()
+const { filterIsHas } = filtersStore
+
+defineEmits(['click'])
 </script>
 
 <template>
@@ -28,7 +34,12 @@ const toggleMenu = () => {
     <div class="dropdown__menu" ref="menu">
       <ul class="dropdown__menu-list">
         <li v-for="(item, i) in list" class="dropdown__menu-item" :key="i">
-          <CheckBox :label="item" :name="item" />
+          <CheckBox
+            :label="item.name"
+            :name="item.name"
+            :isChecked="filterIsHas(item)"
+            @click="() => $emit('click', item)"
+          />
         </li>
       </ul>
     </div>

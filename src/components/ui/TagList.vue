@@ -19,10 +19,10 @@ const tagColor = (tag) => {
 </script>
 
 <template>
-  <ul v-if="tags" class="tags">
+  <ul v-if="tags" class="product-tags">
     <li
       v-for="tag in tags"
-      class="tags__item"
+      class="product-tags__item"
       :key="tag"
       :style="{ backgroundColor: tagColor(tag) }"
     >
@@ -32,14 +32,14 @@ const tagColor = (tag) => {
 </template>
 
 <style lang="scss">
-.tags {
+.product-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 2px 6px;
   width: 100%;
 }
 
-.tags__item {
+.product-tags__item {
   padding: 6px 8px;
   font-weight: 500;
   font-size: 12px;
