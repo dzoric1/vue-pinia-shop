@@ -10,6 +10,8 @@ import PriceComponent from './ui/PriceComponent.vue'
 import { useCartStore } from '@/stores/cart'
 import { useProductsStore } from '@/stores/products'
 import { storeToRefs } from 'pinia'
+import WeightCounter from './ui/WeightCounter.vue'
+import convertWeight from '@/utils/convertWeight'
 
 const props = defineProps({
   product: {
@@ -27,11 +29,6 @@ const isPopupShow = ref(false)
 const cartItem = computed(() => {
   return cart.value.find((item) => item.id === props.product.id)
 })
-
-const convertWeight = (weight) => {
-  const result = weight >= 1000 ? `${weight / 1000} кг` : `${weight} г`
-  return result
-}
 
 const totalWeight = computed(() => {
   return cartItem.value ? cartItem.value.totalWeight : 0
@@ -66,19 +63,12 @@ const totalWeight = computed(() => {
           <IconAddToCart />
         </button>
       </div>
-      <div v-show="totalWeight" class="catalog__item-cart-count">
-        <button
-          class="catalog__item-cart-button catalog__item-cart-button--minus"
-          @click="() => decrementCartItem(cartItem)"
-        ></button>
-        <p class="catalog__item-cart-count-value">
-          {{ convertWeight(totalWeight) }}
-        </p>
-        <button
-          class="catalog__item-cart-button catalog__item-cart-button--plus"
-          @click="() => incrementCartItem(cartItem)"
-        ></button>
-      </div>
+      <WeightCounter
+        v-show="totalWeight"
+        :weight="totalWeight"
+        @increment="() => incrementCartItem(cartItem)"
+        @decrement="() => decrementCartItem(cartItem)"
+      />
     </div>
   </div>
 
@@ -117,19 +107,12 @@ const totalWeight = computed(() => {
             :points="product.points"
             class="catalog__item-about-price"
           />
-          <div v-show="totalWeight" class="catalog__item-cart-count">
-            <button
-              class="catalog__item-cart-button catalog__item-cart-button--minus"
-              @click="() => decrementCartItem(cartItem)"
-            ></button>
-            <p class="catalog__item-cart-count-value">
-              {{ convertWeight(totalWeight) }}
-            </p>
-            <button
-              class="catalog__item-cart-button catalog__item-cart-button--plus"
-              @click="() => incrementCartItem(cartItem)"
-            ></button>
-          </div>
+          <WeightCounter
+            v-show="totalWeight"
+            :weight="totalWeight"
+            @increment="() => incrementCartItem(cartItem)"
+            @decrement="() => decrementCartItem(cartItem)"
+          />
           <button
             class="catalog__item-about-add"
             @click="() => addToCart(product)"
@@ -241,52 +224,52 @@ const totalWeight = computed(() => {
   }
 }
 
-.catalog__item-cart-count {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 15px;
-  max-width: 240px;
-}
+// .catalog__item-cart-count {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   margin-top: 15px;
+//   max-width: 240px;
+// }
 
-.catalog__item-cart-button {
-  border-radius: 9px;
-  width: 44px;
-  height: 44px;
-  background: rgba(93, 136, 150, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  transition: opacity 0.2s ease;
+// .catalog__item-cart-button {
+//   border-radius: 9px;
+//   width: 44px;
+//   height: 44px;
+//   background: rgba(93, 136, 150, 0.08);
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   position: relative;
+//   transition: opacity 0.2s ease;
 
-  &:hover {
-    opacity: 0.6;
-  }
+//   &:hover {
+//     opacity: 0.6;
+//   }
 
-  &::after,
-  &::before {
-    position: absolute;
-    content: '';
-    display: block;
-    width: 18px;
-    height: 2px;
-    background: var(--text-black);
-    pointer-events: all;
-    border-radius: 2px;
-  }
+//   &::after,
+//   &::before {
+//     position: absolute;
+//     content: '';
+//     display: block;
+//     width: 18px;
+//     height: 2px;
+//     background: var(--text-black);
+//     pointer-events: all;
+//     border-radius: 2px;
+//   }
 
-  &--plus {
-    &::before {
-      transform: rotate(90deg);
-    }
-  }
-}
-.catalog__item-cart-count-value {
-  font-weight: 600;
-  font-size: 16px;
-  text-align: center;
-}
+//   &--plus {
+//     &::before {
+//       transform: rotate(90deg);
+//     }
+//   }
+// }
+// .catalog__item-cart-count-value {
+//   font-weight: 600;
+//   font-size: 16px;
+//   text-align: center;
+// }
 
 .catalog__item-about-description {
   display: flex;

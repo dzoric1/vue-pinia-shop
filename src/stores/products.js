@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from 'pinia'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref } from 'vue'
 import { useSortStore } from './sort'
 
 const baseUrl = 'https://ec1e0dcee8241ee0.mokky.dev/items'
@@ -38,10 +38,6 @@ export const useProductsStore = defineStore('products', () => {
 
       return (valueB - valueA) * sortOrder
     })
-  })
-
-  watchEffect(() => {
-    console.log(sortedProducts.value)
   })
 
   const getProducts = async () => {
