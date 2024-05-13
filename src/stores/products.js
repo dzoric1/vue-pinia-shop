@@ -1,5 +1,6 @@
-import { defineStore, storeToRefs } from 'pinia'
+import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import { useFiltersStore } from './filters'
 import { useSortStore } from './sort'
 
 const baseUrl = 'https://ec1e0dcee8241ee0.mokky.dev/items'
@@ -8,36 +9,12 @@ export const useProductsStore = defineStore('products', () => {
   const isProductsLoading = ref(false)
   const products = ref([])
   const sortStore = useSortStore()
-  const { sort } = storeToRefs(sortStore)
+  const filtersStore = useFiltersStore()
+  const { filterProducts } = filtersStore
+  const { sortProducts } = sortStore
 
-  const sortedProducts = computed(() => {
-    if (!sort.value) return products.value
-
-    const sortOrder = sort.value.sortProperty.startsWith('-') ? -1 : 1
-    const sortProperty = sort.value.sortProperty.replace('-', '')
-
-    return products.value.sort((a, b) => {
-      let valueA, valueB
-
-      switch (sortProperty) {
-        case 'rating':
-          valueA = a.rating
-          valueB = b.rating
-          break
-        case 'price':
-          valueA = a.discountPrice || a.price
-          valueB = b.discountPrice || b.price
-          break
-        case 'discountPrice':
-          valueA = a.discountPrice ? a.price / a.discountPrice : 0
-          valueB = b.discountPrice ? b.price / b.discountPrice : 0
-          break
-        default:
-          throw new Error(`Неверное свойство сортировки: ${sortProperty}`)
-      }
-
-      return (valueB - valueA) * sortOrder
-    })
+  const currentProducts = computed(() => {
+    return sortProducts(filterProducts(products.value))
   })
 
   const getProducts = async () => {
@@ -96,6 +73,6 @@ export const useProductsStore = defineStore('products', () => {
     totalProducts,
     favoriteProducts,
     toggleFavorite,
-    sortedProducts
+    currentProducts
   }
 })

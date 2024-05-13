@@ -1,10 +1,13 @@
 <script setup>
 import IconSearch from '../icons/IconSearch.vue'
+import { useFiltersStore } from '@/stores/filters'
 
 const props = defineProps({
   class: String,
   placeholder: String
 })
+
+const filtersStore = useFiltersStore()
 </script>
 
 <template>
@@ -13,7 +16,8 @@ const props = defineProps({
       <input
         class="search__input"
         type="text"
-        :placeholder="props.placeholder"
+        :placeholder="placeholder"
+        v-model="filtersStore.search"
       />
       <button class="search__submit" type="submit" aria-label="Поиск">
         <IconSearch />

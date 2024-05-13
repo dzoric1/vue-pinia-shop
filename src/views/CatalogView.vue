@@ -1,19 +1,15 @@
 <script setup>
-import CheckBox from '@/components/ui/CheckBox.vue'
 import DropdownMenu from '@/components/ui/DropdownMenu.vue'
 import RangeSlider from '@/components/ui/RangeSlider.vue'
-import useClickOutside from '@/hooks/useClickOutside.js'
 import CatalogItem from '@/components/CatalogItem.vue'
-
 import { useProductsStore } from '@/stores/products'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted, computed, watch } from 'vue'
+import { onMounted, computed } from 'vue'
 import AppLoader from '@/components/ui/AppLoader.vue'
 import SortComponent from '@/components/ui/SortComponent.vue'
 
 const productsStore = useProductsStore()
-
-const { products, isProductsLoading, totalProducts, sortedProducts } =
+const { products, isProductsLoading, totalProducts, currentProducts } =
   storeToRefs(productsStore)
 
 const { getProducts } = productsStore
@@ -135,7 +131,7 @@ onMounted(async () => {
           </li>
         </ul>
         <ul v-else class="catalog__list">
-          <li v-for="product in sortedProducts" :key="product.id">
+          <li v-for="product in currentProducts" :key="product.id">
             <CatalogItem :product="product" />
           </li>
         </ul>
@@ -145,9 +141,6 @@ onMounted(async () => {
 </template>
 
 <style lang="scss">
-.catalog {
-}
-
 .catalog__container {
   display: flex;
   gap: 40px;

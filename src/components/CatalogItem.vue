@@ -1,7 +1,8 @@
 <script setup>
+import { storeToRefs } from 'pinia'
+import { ref, computed } from 'vue'
 import CatalogItemHeader from './CatalogItemHeader.vue'
 import IconAddToCart from './icons/IconAddToCart.vue'
-import { ref, computed } from 'vue'
 import PopupWrapper from './ui/PopupWrapper.vue'
 import RateComponent from './ui/RateComponent.vue'
 import LikeComponent from './ui/LikeComponent.vue'
@@ -9,7 +10,6 @@ import TagList from './ui/TagList.vue'
 import PriceComponent from './ui/PriceComponent.vue'
 import { useCartStore } from '@/stores/cart'
 import { useProductsStore } from '@/stores/products'
-import { storeToRefs } from 'pinia'
 import WeightCounter from './ui/WeightCounter.vue'
 import convertWeight from '@/utils/convertWeight'
 
@@ -19,11 +19,13 @@ const props = defineProps({
     required: true
   }
 })
+
 const cartStore = useCartStore()
 const productStore = useProductsStore()
 const { cart } = storeToRefs(cartStore)
 const { toggleFavorite } = productStore
 const { addToCart, incrementCartItem, decrementCartItem } = cartStore
+
 const isPopupShow = ref(false)
 
 const cartItem = computed(() => {
@@ -77,7 +79,7 @@ const totalWeight = computed(() => {
       <div class="catalog__item-about">
         <div class="catalog__item-about-image">
           <TagList class="catalog__item-about-tags" :tags="product.tags" />
-          <img src="@/assets/cardImage.png" alt="НАЗВАНИЕ ТОВАРА" />
+          <img :src="product.imagesUrl[0]" alt="НАЗВАНИЕ ТОВАРА" />
           <LikeComponent
             @click="() => toggleFavorite(product.id)"
             class="catalog__item-about-like"
@@ -223,53 +225,6 @@ const totalWeight = computed(() => {
     opacity: 0.7;
   }
 }
-
-// .catalog__item-cart-count {
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-//   margin-top: 15px;
-//   max-width: 240px;
-// }
-
-// .catalog__item-cart-button {
-//   border-radius: 9px;
-//   width: 44px;
-//   height: 44px;
-//   background: rgba(93, 136, 150, 0.08);
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   position: relative;
-//   transition: opacity 0.2s ease;
-
-//   &:hover {
-//     opacity: 0.6;
-//   }
-
-//   &::after,
-//   &::before {
-//     position: absolute;
-//     content: '';
-//     display: block;
-//     width: 18px;
-//     height: 2px;
-//     background: var(--text-black);
-//     pointer-events: all;
-//     border-radius: 2px;
-//   }
-
-//   &--plus {
-//     &::before {
-//       transform: rotate(90deg);
-//     }
-//   }
-// }
-// .catalog__item-cart-count-value {
-//   font-weight: 600;
-//   font-size: 16px;
-//   text-align: center;
-// }
 
 .catalog__item-about-description {
   display: flex;

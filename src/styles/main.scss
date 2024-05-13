@@ -1,6 +1,10 @@
 @import './mixins';
 @import './base';
 
+html {
+  scrollbar-gutter: stable;
+}
+
 #app {
   min-width: 360px;
   margin: 0 auto;
