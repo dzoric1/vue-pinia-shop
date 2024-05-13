@@ -43,10 +43,6 @@ const tasteList = computed(() => {
   return getFilterList('taste')
 })
 
-// watch(tasteList, () => {
-//   getProducts()
-// })
-
 onMounted(async () => {
   await getProducts()
 })
@@ -192,6 +188,11 @@ onMounted(async () => {
 .catalog__header {
   display: flex;
   margin-bottom: 30px;
+
+  @include tablet {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .catalog__title {
@@ -205,6 +206,10 @@ onMounted(async () => {
   line-height: 135%;
   color: var(--text-gray);
   align-self: flex-end;
+
+  @include tablet {
+    align-self: flex-start;
+  }
 }
 
 .catalog__tags {
