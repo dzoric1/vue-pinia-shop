@@ -8,15 +8,15 @@ export const useSortStore = defineStore('sort', () => {
   const sortList = [
     {
       name: 'Сначала популярные',
-      sortProperty: '-rating'
+      sortProperty: 'rating'
     },
     {
       name: 'Сначала дешевле',
-      sortProperty: 'price'
+      sortProperty: '-price'
     },
     {
       name: 'Сначала дороже',
-      sortProperty: '-price'
+      sortProperty: 'price'
     },
     {
       name: 'По размеру скидки',

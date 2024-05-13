@@ -13,7 +13,7 @@ import SortComponent from '@/components/ui/SortComponent.vue'
 
 const productsStore = useProductsStore()
 
-const { products, isProductsLoading, totalProducts } =
+const { products, isProductsLoading, totalProducts, sortedProducts } =
   storeToRefs(productsStore)
 
 const { getProducts } = productsStore
@@ -139,7 +139,7 @@ onMounted(async () => {
           </li>
         </ul>
         <ul v-else class="catalog__list">
-          <li v-for="product in products" :key="product.id">
+          <li v-for="product in sortedProducts" :key="product.id">
             <CatalogItem :product="product" />
           </li>
         </ul>
