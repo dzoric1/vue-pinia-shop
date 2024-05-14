@@ -53,6 +53,20 @@ export const useFiltersStore = defineStore('filters', () => {
     console.log(filters.value)
   })
 
+  const filterProducts = (products, filters) => {
+    if (filters.length === 0) {
+      return products
+    }
+    return products.filter((product) => {
+      for (const filter of filters) {
+        if (product[filter.sortValue] === filter.name) {
+          return true
+        }
+      }
+      return false
+    })
+  }
+
   return {
     search,
     filters,
@@ -60,6 +74,7 @@ export const useFiltersStore = defineStore('filters', () => {
     filterProductsBySearch,
     addFilter,
     deleteFilter,
-    filterIsHas
+    filterIsHas,
+    filterProducts
   }
 })

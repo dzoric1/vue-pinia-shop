@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { useFiltersStore } from './filters'
 import { useSortStore } from './sort'
@@ -10,11 +10,14 @@ export const useProductsStore = defineStore('products', () => {
   const products = ref([])
   const sortStore = useSortStore()
   const filtersStore = useFiltersStore()
-  const { filterProductsBySearch } = filtersStore
+  const { filterProductsBySearch, filterProducts } = filtersStore
+  const { filters } = storeToRefs(filtersStore)
   const { sortProducts } = sortStore
 
   const currentProducts = computed(() => {
-    return sortProducts(filterProductsBySearch(products.value))
+    return sortProducts(
+      filterProducts(filterProductsBySearch(products.value), filters.value)
+    )
   })
 
   const getProducts = async () => {

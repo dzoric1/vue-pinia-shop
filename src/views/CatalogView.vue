@@ -136,6 +136,10 @@ onMounted(async () => {
 </template>
 
 <style lang="scss">
+.catalog {
+  padding-bottom: 76px;
+}
+
 .catalog__container {
   display: flex;
   gap: 40px;
