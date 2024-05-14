@@ -67,6 +67,10 @@ export const useFiltersStore = defineStore('filters', () => {
     })
   }
 
+  const resetFilters = () => {
+    filters.value = []
+  }
+
   return {
     search,
     filters,
@@ -75,6 +79,7 @@ export const useFiltersStore = defineStore('filters', () => {
     addFilter,
     deleteFilter,
     filterIsHas,
-    filterProducts
+    filterProducts,
+    resetFilters
   }
 })

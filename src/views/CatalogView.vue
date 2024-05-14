@@ -9,6 +9,7 @@ import { onMounted, computed } from 'vue'
 import AppLoader from '@/components/ui/AppLoader.vue'
 import SortComponent from '@/components/ui/SortComponent.vue'
 import FilterTagList from '@/components/ui/FilterTagList.vue'
+import CatalogPagination from '@/components/ui/CatalogPagination.vue'
 
 const productsStore = useProductsStore()
 const { products, isProductsLoading, totalProducts, currentProducts } =
@@ -17,7 +18,7 @@ const { getProducts } = productsStore
 
 const filterStore = useFiltersStore()
 const { filters } = storeToRefs(filterStore)
-const { addFilter, deleteFilter } = filterStore
+const { addFilter, deleteFilter, resetFilters } = filterStore
 
 const getFilterList = (sortValue) => {
   return products.value.reduce((acc, product) => {
@@ -96,7 +97,11 @@ onMounted(async () => {
           <RangeSlider :max="1000" label="Вес" valueName="г" />
           <RangeSlider :max="1000" label="Цена" valueName="₽" />
         </ul>
-        <button class="catalog__filters-reset" type="button">
+        <button
+          class="catalog__filters-reset"
+          type="button"
+          @click="resetFilters"
+        >
           Очистить фильтр
         </button>
       </aside>
@@ -130,6 +135,10 @@ onMounted(async () => {
           </li>
         </ul>
         <h2 class="catalog__not-found" v-else>Ничего не найдено</h2>
+        <CatalogPagination
+          v-if="currentProducts.length > 0"
+          :total-items="currentProducts.length"
+        />
       </div>
     </div>
   </section>
