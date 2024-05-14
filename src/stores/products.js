@@ -10,6 +10,7 @@ export const useProductsStore = defineStore('products', () => {
   const products = ref([])
   const sortStore = useSortStore()
   const filtersStore = useFiltersStore()
+
   const { filterProductsBySearch, filterProducts } = filtersStore
   const { filters } = storeToRefs(filtersStore)
   const { sortProducts } = sortStore

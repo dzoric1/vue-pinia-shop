@@ -1,30 +1,24 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { usePaginationStore } from '@/stores/pagination'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
 const props = defineProps({
   totalItems: {
     type: Number,
     required: true
-  },
-  itemsPerPage: {
-    type: Number,
-    default: 2
   }
 })
 
-const currentPage = ref(1)
+const paginationStore = usePaginationStore()
+
+const { currentPage, itemsPerPage } = storeToRefs(paginationStore)
+
+const { previousPage, nextPage } = paginationStore
 
 const totalPages = computed(() => {
-  return Math.ceil(props.totalItems / props.itemsPerPage)
+  return Math.ceil(props.totalItems / itemsPerPage.value)
 })
-
-const previousPage = () => {
-  currentPage.value--
-}
-
-const nextPage = () => {
-  currentPage.value++
-}
 </script>
 
 <template>

@@ -10,11 +10,15 @@ import AppLoader from '@/components/ui/AppLoader.vue'
 import SortComponent from '@/components/ui/SortComponent.vue'
 import FilterTagList from '@/components/ui/FilterTagList.vue'
 import CatalogPagination from '@/components/ui/CatalogPagination.vue'
+import { usePaginationStore } from '@/stores/pagination'
 
 const productsStore = useProductsStore()
 const { products, isProductsLoading, totalProducts, currentProducts } =
   storeToRefs(productsStore)
+
 const { getProducts } = productsStore
+const paginationStore = usePaginationStore()
+const { currentPage, itemsPerPage } = storeToRefs(paginationStore)
 
 const filterStore = useFiltersStore()
 const { filters } = storeToRefs(filterStore)
@@ -130,14 +134,20 @@ onMounted(async () => {
           </li>
         </ul>
         <ul v-else-if="currentProducts.length > 0" class="catalog__list">
-          <li v-for="product in currentProducts" :key="product.id">
+          <li
+            v-for="product in currentProducts.slice(
+              (currentPage - 1) * itemsPerPage,
+              itemsPerPage * currentPage
+            )"
+            :key="product.id"
+          >
             <CatalogItem :product="product" />
           </li>
         </ul>
         <h2 class="catalog__not-found" v-else>Ничего не найдено</h2>
         <CatalogPagination
           v-if="currentProducts.length > 0"
-          :total-items="currentProducts.length"
+          :totalItems="currentProducts.length"
         />
       </div>
     </div>
