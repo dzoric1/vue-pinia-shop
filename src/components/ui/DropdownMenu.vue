@@ -18,7 +18,7 @@ const toggleMenu = () => {
 const filtersStore = useFiltersStore()
 const { filterIsHas } = filtersStore
 
-defineEmits(['click'])
+defineEmits(['check', 'uncheck'])
 </script>
 
 <template>
@@ -38,7 +38,8 @@ defineEmits(['click'])
             :label="item.name"
             :name="item.name"
             :isChecked="filterIsHas(item)"
-            @click="() => $emit('click', item)"
+            @check="$emit('check', item)"
+            @uncheck="$emit('uncheck', item)"
           />
         </li>
       </ul>

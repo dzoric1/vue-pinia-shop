@@ -62,31 +62,39 @@ onMounted(async () => {
       <aside class="catalog__filters">
         <ul class="catalog__filters-list">
           <li>
-            <DropdownMenu :list="brandsList" label="Бренд" @click="addFilter" />
+            <DropdownMenu
+              :list="brandsList"
+              label="Бренд"
+              @check="addFilter"
+              @uncheck="deleteFilter"
+            />
           </li>
           <li>
             <DropdownMenu
               :list="countryList"
               label="Страна"
-              @click="addFilter"
+              @check="addFilter"
+              @uncheck="deleteFilter"
             />
           </li>
           <li>
             <DropdownMenu
               :list="menuList"
               label="Направления меню"
-              @click="addFilter"
+              @check="addFilter"
+              @uncheck="deleteFilter"
             />
           </li>
           <li>
             <DropdownMenu
               :list="tasteList"
               label="Вкус мяса"
-              @click="addFilter"
+              @check="addFilter"
+              @uncheck="deleteFilter"
             />
           </li>
-          <RangeSlider :max="480" label="Вес" valueName="г" />
-          <RangeSlider :max="480" label="Цена" valueName="₽" />
+          <RangeSlider :max="1000" label="Вес" valueName="г" />
+          <RangeSlider :max="1000" label="Цена" valueName="₽" />
         </ul>
         <button class="catalog__filters-reset" type="button">
           Очистить фильтр

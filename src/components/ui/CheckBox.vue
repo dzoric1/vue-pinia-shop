@@ -3,11 +3,18 @@ defineProps({
   label: String,
   isChecked: Boolean
 })
+
+defineEmits(['check', 'uncheck'])
 </script>
 
 <template>
   <label class="checkbox" :class="{ 'checkbox--checked': isChecked }">
-    <input type="checkbox" :checked="isChecked" class="checkbox__input" />
+    <input
+      type="checkbox"
+      :checked="isChecked"
+      class="checkbox__input"
+      @change="isChecked ? $emit('uncheck') : $emit('check')"
+    />
     <span class="checkbox__icon"></span>
     {{ label }}
   </label>

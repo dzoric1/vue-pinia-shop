@@ -170,6 +170,12 @@ input[type='number']:out-of-range {
   color: var(--red);
 }
 
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 input[type='range'] {
   appearance: none;
   width: 100%;
